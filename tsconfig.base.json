@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@nx-affected-circleci-demo/my-lib-a": ["libs/my-lib-a/src/index.ts"],
+      "@nx-affected-circleci-demo/my-lib-b": ["libs/my-lib-b/src/index.ts"],
+      "@nx-affected-circleci-demo/my-lib-c": ["libs/my-lib-c/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

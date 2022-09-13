@@ -3,6 +3,13 @@
   "version": 2,
   "projects": {
     "my-app-a": "apps/my-app-a",
-    "my-app-a-e2e": "apps/my-app-a-e2e"
+    "my-app-a-e2e": "apps/my-app-a-e2e",
+    "my-app-b": "apps/my-app-b",
+    "my-app-b-e2e": "apps/my-app-b-e2e",
+    "my-app-c": "apps/my-app-c",
+    "my-app-c-e2e": "apps/my-app-c-e2e",
+    "my-lib-a": "libs/my-lib-a",
+    "my-lib-b": "libs/my-lib-b",
+    "my-lib-c": "libs/my-lib-c"
   }
 }

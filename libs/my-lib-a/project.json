@@ -1,0 +1,22 @@
+{
+  "projectType": "library",
+  "sourceRoot": "libs/my-lib-a/src",
+  "prefix": "nx-affected-circleci-demo",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/my-lib-a"],
+      "options": {
+        "jestConfig": "libs/my-lib-a/jest.config.ts",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": ["libs/my-lib-a/**/*.ts", "libs/my-lib-a/**/*.html"]
+      }
+    }
+  },
+  "tags": []
+}
