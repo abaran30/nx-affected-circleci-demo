@@ -17,8 +17,26 @@ jobs:
           paths:
             - node_modules
           key: node_modules-{{ checksum "package-lock.json" }}
+      - nx/set-shas
+      - run:
+          name: Prepare parameters for continuation
+          command: |
+            # Build
+            export AFFECTED_PROJECTS_BUILD=$(npx nx print-affected --target=build --select=tasks.target.project)
+            export NUM_AFFECTED_PROJECTS_BUILD=$(echo $AFFECTED_PROJECTS_BUILD | sed "s/\n//g" | sed "s/, /\n/g" | wc -l | xargs)
+
+            # Lint
+            export AFFECTED_PROJECTS_LINT=$(npx nx print-affected --target=lint --select=tasks.target.project)
+            export NUM_AFFECTED_PROJECTS_LINT=$(echo $AFFECTED_PROJECTS_LINT | sed "s/\n//g" | sed "s/, /\n/g" | wc -l | xargs)
+
+            # Test
+            export AFFECTED_PROJECTS_TEST=$(npx nx print-affected --target=test --select=tasks.target.project)
+            export NUM_AFFECTED_PROJECTS_TEST=$(echo $AFFECTED_PROJECTS_TEST | sed "s/\n//g" | sed "s/, /\n/g" | wc -l | xargs)
+
+            echo '{ "affected-projects-build": "'$AFFECTED_PROJECTS_BUILD'", "num-affected-projects-build": '$NUM_AFFECTED_PROJECTS_BUILD', "affected-projects-lint": "'$AFFECTED_PROJECTS_LINT'", "num-affected-projects-lint": '$NUM_AFFECTED_PROJECTS_LINT', "affected-projects-test": "'$AFFECTED_PROJECTS_TEST'", "num-affected-projects-test": '$NUM_AFFECTED_PROJECTS_TEST' }' >> .circleci/continuation-params.json
       - continuation/continue:
           configuration_path: ./.circleci/continuation.yml
+          parameters: ./.circleci/continuation-params.json
 
 workflows:
   setup:

@@ -1,38 +1,98 @@
 version: 2.1
 
+parameters:
+  affected-projects-build:
+    type: string
+    default: ""
+  num-affected-projects-build:
+    type: integer
+    default: 1
+  affected-projects-lint:
+    type: string
+    default: ""
+  num-affected-projects-lint:
+    type: integer
+    default: 1
+  affected-projects-test:
+    type: string
+    default: ""
+  num-affected-projects-test:
+    type: integer
+    default: 1
+
 jobs:
   build:
     docker:
       - image: cimg/node:16.13.1
+    parallelism: <<pipeline.parameters.num-affected-projects-build>>
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - node_modules-{{ checksum "package-lock.json" }}
-      - run:
-          command: echo "build completed"
+      - when:
+          condition: <<pipeline.parameters.affected-projects-build>>
+          steps:
+            - checkout
+            - restore_cache:
+                keys:
+                  - node_modules-{{ checksum "package-lock.json" }}
+            - run:
+                name: Build affected projects
+                command: |
+                  AFFECTED_PROJECTS=$(echo "<<pipeline.parameters.affected-projects-build>>" | sed 's/, /\n/g' | circleci tests split)
+                  npx nx run-many --target=build --projects=$AFFECTED_PROJECTS
+      - unless:
+          condition: <<pipeline.parameters.affected-projects-build>>
+          steps:
+            - run:
+                name: No affected projects to build
+                command: echo "No affected projects to build"
+
 
   lint:
     docker:
       - image: cimg/node:16.13.1
+    parallelism: <<pipeline.parameters.num-affected-projects-lint>>
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - node_modules-{{ checksum "package-lock.json" }}
-      - run:
-          command: echo "lint completed"
+      - when:
+          condition: <<pipeline.parameters.affected-projects-lint>>
+          steps:
+            - checkout
+            - restore_cache:
+                keys:
+                  - node_modules-{{ checksum "package-lock.json" }}
+            - run:
+                name: Lint affected projects
+                command: |
+                  AFFECTED_PROJECTS=$(echo "<<pipeline.parameters.affected-projects-lint>>" | sed 's/, /\n/g' | circleci tests split)
+                  npx nx run-many --target=lint --projects=$AFFECTED_PROJECTS
+      - unless:
+          condition: <<pipeline.parameters.affected-projects-lint>>
+          steps:
+            - run:
+                name: No affected projects to lint
+                command: echo "No affected projects to lint"
 
   test:
     docker:
       - image: cimg/node:16.13.1
+    parallelism: <<pipeline.parameters.num-affected-projects-test>>
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - node_modules-{{ checksum "package-lock.json" }}
-      - run:
-          command: echo "test completed"
+      - when:
+          condition: <<pipeline.parameters.affected-projects-test>>
+          steps:
+            - checkout
+            - restore_cache:
+                keys:
+                  - node_modules-{{ checksum "package-lock.json" }}
+            - run:
+                name: Test affected projects
+                command: |
+                  AFFECTED_PROJECTS=$(echo "<<pipeline.parameters.affected-projects-test>>" | sed 's/, /\n/g' | circleci tests split)
+                  npx nx run-many --target=test --projects=$AFFECTED_PROJECTS
+      - unless:
+          condition: <<pipeline.parameters.affected-projects-test>>
+          steps:
+            - run:
+                name: No affected projects to test
+                command: echo "No affected projects to test"
 
 workflows:
   build-lint-test:
