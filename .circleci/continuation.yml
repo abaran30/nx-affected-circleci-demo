@@ -30,6 +30,7 @@ jobs:
             ###############################################################################################################################
             # TODO
             ###############################################################################################################################
+
             AFFECTED_PROJECTS=$(echo "<<pipeline.parameters.affected-projects-build>>" | sed 's/, /\n/g' | circleci tests split)
             npx nx run-many --target=build --projects=$AFFECTED_PROJECTS
 
