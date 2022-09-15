@@ -1,5 +1,13 @@
 version: 2.1
 
+parameters:
+  affected-projects-build:
+    type: string
+    default: ''
+  num-affected-projects-build:
+    type: integer
+    default: 1
+
 jobs:
   build:
     docker:
@@ -10,7 +18,10 @@ jobs:
           keys:
             - node_modules-{{ checksum "package-lock.json" }}
       - run:
-          command: echo "build completed"
+          name: Build affected projects
+          command: |
+            AFFECTED_PROJECTS=$(echo "<<pipeline.parameters.affected-projects-build>>") | sed 's/, /\n/g' | circleci tests split)
+            npx nx run-many --target=build --projects=$AFFECTED_PROJECTS
 
   lint:
     docker:

@@ -17,8 +17,24 @@ jobs:
           paths:
             - node_modules
           key: node_modules-{{ checksum "package-lock.json" }}
+      - nx/set-shas
+      - run:
+          name: Prepare parameters for continuation
+          command: |
+            # Build
+            export AFFECTED_PROJECTS_BUILD=$(npx nx print-affected --target=build --select=tasks.target.project)
+            export NUM_AFFECTED_PROJECTS_BUILD=$(echo $AFFECTED_PROJECTS_BUILD | sed "s/, /\n/g" | wc -l | xargs)
+
+            # Lint
+            # TODO
+
+            # Test
+            # TODO
+
+            echo '{ "affected-projects-build": "'$AFFECTED_PROJECTS_BUILD'", "num-affected-projects-build": '$NUM_AFFECTED_PROJECTS_BUILD' }' >> .circleci/continuation-params.json
       - continuation/continue:
           configuration_path: ./.circleci/continuation.yml
+          parameters: ./.circleci/continuation-params.json
 
 workflows:
   setup:
