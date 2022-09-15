@@ -30,7 +30,8 @@ jobs:
 
             # Test
             # TODO
-
+            echo $AFFECTED_PROJECTS_BUILD
+            echo $NUM_AFFECTED_PROJECTS_BUILD
             echo '{ "affected-projects-build": "'$AFFECTED_PROJECTS_BUILD'", "num-affected-projects-build": '$NUM_AFFECTED_PROJECTS_BUILD' }' >> .circleci/continuation-params.json
       - continuation/continue:
           configuration_path: ./.circleci/continuation.yml
