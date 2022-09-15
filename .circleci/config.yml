@@ -28,6 +28,9 @@ jobs:
             # Lint
             export AFFECTED_PROJECTS_LINT=$(npx nx print-affected --target=lint --select=tasks.target.project)
             export NUM_AFFECTED_PROJECTS_LINT=$(echo $AFFECTED_PROJECTS_LINT | sed "s/\n//g" | sed "s/, /\n/g" | wc -l | xargs)
+            echo $AFFECTED_PROJECTS_LINT
+            echo $NUM_AFFECTED_PROJECTS_LINT
+
 
             # Test
             export AFFECTED_PROJECTS_TEST=$(npx nx print-affected --target=test --select=tasks.target.project)
