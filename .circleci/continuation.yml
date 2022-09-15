@@ -12,6 +12,7 @@ jobs:
   build:
     docker:
       - image: cimg/node:16.13.1
+    parallelism: <<pipeline.parameters.num-affected-projects-build>>
     steps:
       - checkout
       - restore_cache:
