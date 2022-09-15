@@ -1,0 +1,42 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/node:16.13.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node_modules-{{ checksum "package-lock.json" }}
+      - run:
+          command: echo "build completed"
+
+  lint:
+    docker:
+      - image: cimg/node:16.13.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node_modules-{{ checksum "package-lock.json" }}
+      - run:
+          command: echo "lint completed"
+
+  test:
+    docker:
+      - image: cimg/node:16.13.1
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - node_modules-{{ checksum "package-lock.json" }}
+      - run:
+          command: echo "test completed"
+
+workflows:
+  build-lint-test:
+    jobs:
+      - build
+      - lint
+      - test
