@@ -1,4 +1,6 @@
 {
+  "name": "my-app-b",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/my-app-b/src",
   "prefix": "nx-affected-circleci-demo",
@@ -69,14 +71,14 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "options": {
         "lintFilePatterns": ["apps/my-app-b/**/*.ts", "apps/my-app-b/**/*.html"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/my-app-b"],
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/apps/my-app-b"],
       "options": {
         "jestConfig": "apps/my-app-b/jest.config.ts",
         "passWithNoTests": true
